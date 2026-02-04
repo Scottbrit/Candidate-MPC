@@ -31,7 +31,7 @@ const AppSidebar: React.FC = () => {
     : [
         {
           icon: <GridIcon />,
-          name: "Candidates",
+          name: "Candidates 2",
           path: "/dashboard",
         },
         {
