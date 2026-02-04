@@ -188,6 +188,28 @@ The deployment consists of 4 services:
    - Render will build and deploy automatically
    - Initial deployment takes ~10-15 minutes
 
+#### Continuous Deployment (Updates After Initial Setup)
+
+Once your repository is connected to Render, **all future deployments are automatic**. Here's how it works:
+
+1. **Make your code changes** locally and commit them:
+   ```bash
+   git add .
+   git commit -m "Your commit message describing the changes"
+   ```
+
+2. **Push to the main branch**:
+   ```bash
+   git push origin main
+   ```
+
+3. **Automatic deployment starts immediately**:
+   - Render detects the new commit on the `main` branch
+   - All services (backend, frontend, worker) rebuild automatically
+   - Deployment takes ~4-6 minutes
+   - You can monitor progress in the Render dashboard
+
+> **That's it!**
 ---
 
 ## Key Features & Routes
