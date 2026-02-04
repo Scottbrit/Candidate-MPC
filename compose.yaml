@@ -1,0 +1,55 @@
+services:
+
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      - PORT=8000
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+    env_file:
+      - backend/.env
+    ports:
+      - 8000:8000
+    depends_on:
+      - redis
+  
+  worker:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    command: /app/.venv/bin/celery -A src.workers.celery worker --loglevel=info
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
+    env_file:
+      - backend/.env
+    depends_on:
+      - backend
+      - redis
+
+  redis:
+    image: redis:8.2-alpine
+    ports:
+      - 6379:6379
+  
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.dev
+    env_file:
+      - frontend/.env
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/tsconfig.app.json:/app/tsconfig.app.json
+      - ./frontend/tsconfig.node.json:/app/tsconfig.node.json
+      - ./frontend/eslint.config.js:/app/eslint.config.js
+      # Exclude node_modules to avoid conflicts
+      - /app/node_modules
